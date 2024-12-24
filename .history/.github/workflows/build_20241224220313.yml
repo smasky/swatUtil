@@ -1,0 +1,52 @@
+name: Build and Upload .so Files
+
+on:
+  push:
+    branches:
+      - master  # 在推送到 main 分支时触发
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 设置 Python 环境
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"  # 可根据需要选择其他 Python 版本
+
+      # 安装构建工具和依赖
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++  # 安装 GCC
+          python -m pip install --upgrade pip
+          python -m pip install setuptools wheel cython pybind11 numpy
+
+      # 验证 GCC 版本并确保支持 C++20
+      - name: Verify GCC version
+        run: |
+          g++ --version
+          echo "CXXFLAGS=-std=c++20" >> $GITHUB_ENV
+
+      # 构建扩展模块
+      - name: Build Python extensions
+        run: python setup.py build_ext --inplace
+
+      # 确保生成的 .so 文件存在
+      - name: Verify .so files
+        run: |
+          ls -al *.so
+
+      # 打包 .so 文件为工作流工件
+      - name: Upload .so files
+        uses: actions/upload-artifact@v3
+        with:
+          name: so-files
+          path: "*.so"  # 匹配所有生成的 .so 文件
