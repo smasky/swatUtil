@@ -294,7 +294,6 @@ void _write_value(const std::string file_path, const std::string file_name, cons
                 if (sign[i] && std::regex_search(line, match, patterns[i])) {
                     std::string result=_generate_value(default_value[var_list[i]], var_mode[i], input_values.at(var_index[i]), 1);
                     // line=std::regex_replace(line, patterns[i], match[1].str()+std::format("{}", result)+match[3].str());
-                    line = std::regex_replace(line, patterns[i], match[1].str() + result + match[3].str());
                     sign[i] = 0;
                     }
                 }
@@ -339,8 +338,7 @@ std::unordered_map<std::string, std::vector<double>> _read_value_swat(const std:
     if (file_extension == "sol"){
 
         for (const auto& varname : varname_list) {
-        // std::string p = std::format(R"(\s*({}).*)", varname);
-        std::string p = R"(\s*()" + varname + R"().*)";
+        std::string p = std::format(R"(\s*({}).*)", varname);
         patterns.emplace_back(p);
         }
 
@@ -408,8 +406,7 @@ std::unordered_map<std::string, std::vector<double>> _read_value_swat(const std:
         
         for (int i = 0; i < varname_list.size(); ++i) {
             const auto& varname = varname_list[i];
-            std::string p = R"(\s*(-?\d*\.?\d*?)\s*\|\s*)" + varname;
-            // std::string p = std::format(R"(\s*(-?\d*\.?\d*?)\s*\|\s*{})", varname);
+            std::string p = std::format(R"(\s*(-?\d*\.?\d*?)\s*\|\s*{})", varname);
             patterns.emplace_back(p);
         }
 

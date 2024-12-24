@@ -9,7 +9,7 @@ ext_modules = [
         "swat_utility",  # 模块名
         ["swat_utility.cpp"],  # 源代码文件
         # 可以在这里定义额外的编译器和链接器选项
-        extra_compile_args=['-std=c++17'] if sys.platform != 'win32' else ['/std:c++20'],
+        extra_compile_args=['-std=c++20'] if sys.platform != 'win32' else ['/std:c++20'],
         define_macros=[('VERSION_INFO', '"1.0"')],
          include_dirs=[
             numpy.get_include()  # 添加 numpy 头文件的路径

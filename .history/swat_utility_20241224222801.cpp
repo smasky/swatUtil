@@ -339,8 +339,7 @@ std::unordered_map<std::string, std::vector<double>> _read_value_swat(const std:
     if (file_extension == "sol"){
 
         for (const auto& varname : varname_list) {
-        // std::string p = std::format(R"(\s*({}).*)", varname);
-        std::string p = R"(\s*()" + varname + R"().*)";
+        std::string p = std::format(R"(\s*({}).*)", varname);
         patterns.emplace_back(p);
         }
 
@@ -408,8 +407,7 @@ std::unordered_map<std::string, std::vector<double>> _read_value_swat(const std:
         
         for (int i = 0; i < varname_list.size(); ++i) {
             const auto& varname = varname_list[i];
-            std::string p = R"(\s*(-?\d*\.?\d*?)\s*\|\s*)" + varname;
-            // std::string p = std::format(R"(\s*(-?\d*\.?\d*?)\s*\|\s*{})", varname);
+            std::string p = std::format(R"(\s*(-?\d*\.?\d*?)\s*\|\s*{})", varname);
             patterns.emplace_back(p);
         }
 
