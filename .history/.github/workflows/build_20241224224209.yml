@@ -38,7 +38,6 @@ jobs:
       # 构建扩展模块
       - name: Build Python extensions
         run: python setup.py build_ext --inplace
-      - name: Run test script
         run: python test.py
 
       # 确保生成的 .so 文件存在
