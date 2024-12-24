@@ -3,7 +3,7 @@ name: Build and Upload .so Files
 on:
   push:
     branches:
-      - main  # 在推送到 main 分支时触发
+      - master  # 在推送到 main 分支时触发
   pull_request:
 
 jobs:
