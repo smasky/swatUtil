@@ -174,7 +174,7 @@ void _write_value(const std::string file_path, const std::string file_name, cons
                     // std::cout<<default_value[i]<<std::endl;
                     std::string result=_generate_value(default_value[var_list[i]], var_mode[i], input_values.at(var_index[i]), 0);
                     // std::cout<<result<<std::endl;
-                    line=std::regex_replace(line, patterns[i], match[1].str()+match[2].str()+result;
+                    line=std::regex_replace(line, patterns[i], match[1].str()+match[2].str()+result);
                     sign[i] = 0;
                     }
                 }
