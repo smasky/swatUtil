@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <exception>
 #include <map>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
@@ -219,47 +220,6 @@ void _write_value(const std::string file_path, const std::string file_name, cons
                 numbers[col-1]=strValue;
             }
 
-            // std::ostringstream oss;
-            // oss << std::right;
-
-            // 根据 vector 的大小动态格式化输出
-            // if (numbers.size() >= 1) {
-            //     oss << std::setw(3) << std::stoi(numbers[0]); // 1x, i2 (2字符宽度)
-            // }
-            // if (numbers.size() >= 2) {
-            //     oss << std::setw(3) << std::stoi(numbers[1]); // 1x, i2
-            // }
-            // if (numbers.size() >= 3) {
-            //     oss << std::setw(9) << std::stoi(numbers[2]); // 5x, i4
-            // }
-            // if (numbers.size() >= 4) {
-            //     oss << std::setw(3) << std::stoi(numbers[3]); // 1x, i2
-            // }
-            // if (numbers.size() >= 5) {
-            //     oss << std::setw(5) << std::stoi(numbers[4]); // 1x, i4
-            // }
-            // if (numbers.size() >= 6) {
-            //     oss << std::setw(4) << std::stoi(numbers[5]); // 1x, i3
-            // }
-            // if (numbers.size() >= 7) {
-            //     oss << std::setw(7) << std::fixed << std::setprecision(2) << std::stof(numbers[6]); // 1x, f6.2
-            // }
-            // if (numbers.size() >= 8) {
-            //     oss << std::setw(13) << std::fixed << std::setprecision(5) << std::stof(numbers[7]); // 1x, f12.5
-            // }
-            // if (numbers.size() >= 9) {
-            //     oss << std::setw(7) << std::fixed << std::setprecision(2) << std::stof(numbers[8]); // 1x, f6.2
-            // }
-            // if (numbers.size() >= 10) {
-            //     oss << std::setw(12) << std::fixed << std::setprecision(5) << std::stof(numbers[9]); // 1x, f11.5
-            // }
-            // if (numbers.size() >= 11) {
-            //     oss << std::setw(9) << std::fixed << std::setprecision(2) << std::stof(numbers[10]); // 1x, f8.2
-            // }
-            // if (numbers.size() >= 12) {
-            //     oss << std::setw(7) << std::fixed << std::setprecision(2) << std::stof(numbers[11]); // 1x, f6.2
-            // }
-
             std::ostringstream oss;
             oss<< std::right;
             oss << std::setw(3) << static_cast<int>(numbers[0]) // 1x, i2 (2字符宽度)
@@ -306,13 +266,18 @@ void _write_value(const std::string file_path, const std::string file_name, cons
     fs::path old_file = fs::path(file_path) / file_name;
     fs::path new_file_ = fs::path(file_path) / new_file_path;
 
-    fs::remove(old_file);          // 删除旧文件（如果存在）
-    fs::rename(new_file_, old_file); // 重命名新文件为旧文件名
+    // std::remove(old_file.c_str());
+    // std::rename(new_file_.c_str(), old_file.c_str());
+    fs::rename(new_file_, old_file);
+    fs::remove(old_file);
 
 }
 
 std::unordered_map<std::string, std::vector<double>> _read_value_swat(const std::string& file_path, const std::string &file_name, 
                     const std::vector<std::string>& varname_list, const std::vector<std::string>& position_list, const int &mode) {
+    
+    // fs::path file_to_open = fs::path(file_path) / file_name;
+    // std::ifstream file(file_to_open);
     
     fs::path file_to_open = fs::path(file_path) / file_name;
     std::ifstream file(file_to_open.string());
@@ -561,6 +526,7 @@ void _copy_origin_to_tmp(const std::string &source, const std::string &destinati
 PYBIND11_MODULE(swat_utility, m) {
     m.doc() = "Swat utility plugin"; // 可选的模块文档字符串
     m.def("read_value_swat", &_read_value_swat, "A function that reads and processes file data based on regex patterns.", py::call_guard<py::gil_scoped_release>());
+    // m.def("set_value_swat", &_set_value_swat, "A function that sets and processes file data based on regex patterns.", py::call_guard<py::gil_scoped_release>());
     m.def("read_simulation", &_read_simulation, "A function that reads the 6th column from a file and returns as a numpy array",
           py::call_guard<py::gil_scoped_release>());
     m.def("copy_origin_to_tmp", &_copy_origin_to_tmp, "A function that copies the origin folder to the tmp folder", py::call_guard<py::gil_scoped_release>());
